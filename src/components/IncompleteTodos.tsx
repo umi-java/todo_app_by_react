@@ -2,7 +2,7 @@ import { Category, Todo } from "../Todo";
 
 const style = {
   border: "2px solid #aacfd0",
-  minWidth: "200px",
+  width: "300px",
   minHeight: "200px",
   padding: "8px",
   margin: "8px",

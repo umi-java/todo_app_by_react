@@ -3,7 +3,7 @@ import { Category } from "../Todo";
 
 const style = {
   backgroundColor: "#c6e5d9",
-  width: "400px",
+  width: "600px",
   height: "30px",
   padding: "8px",
   margin: "8px",

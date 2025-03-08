@@ -4,40 +4,59 @@ import { InputTodo } from "./components/InputTodos"
 import { IncompleteTodos } from "./components/IncompleteTodos"
 import { CompleteTodos } from "./components/CompleteTodos"
 
+export type Category = "work" | "prv"
+
+export type Todo = {
+  text: string
+  category: Category
+}
+
 export const Todo = () => {
-    const [todoText, setTodoText] = useState("")
-    const [incompleteTodos, setInCompleteTodos] = useState<string[]>([])
-    const [completeTodos, setCompleteTodos] = useState<string[]>([])
 
-    const onChangeTodoText = (event: ChangeEvent<HTMLInputElement>) => setTodoText(event.target.value);
+  const [todoText, setTodoText] = useState<string>("")
+  const [incompleteTodos, setInCompleteTodos] = useState<Todo[]>([])
+  const [completeTodos, setCompleteTodos] = useState<Todo[]>([])
 
-  const onClickAdd = () => {
+
+  const onChangeTodoText = (event: ChangeEvent<HTMLInputElement>) => setTodoText(event.target.value);
+
+  const onClickAdd = (category: Category) => {
     if (todoText === "") return;
-    const newTodos = [...incompleteTodos, todoText]
-    setInCompleteTodos(newTodos)
+    const newTodo: Todo = { text: todoText, category: category }
+    setInCompleteTodos([...incompleteTodos, newTodo])
     setTodoText("")
   }
 
-  const onClickDelete = (index: number) => {
-    const newTodos = [...incompleteTodos];
-    newTodos.splice(index, 1);
+  const onClickDeleteForWork = (index: number, category: Category) => {
+    // const newTodos = [...incompleteTodos];
+    // newTodos.splice(index, 1);
+    const targetTodos = incompleteTodos.filter((todo) => todo.category === category)
+    const targetTodo = targetTodos[index]
+
+    const newTodos = [...incompleteTodos].filter((todo) => todo !== targetTodo)
     setInCompleteTodos(newTodos);
-  };
+  }
 
-  const onClickComplete = (index: number) => {
-    const newIncompleteTodos = [...incompleteTodos];
-    newIncompleteTodos.splice(index, 1);
+  const onClickComplete = (index: number, category: Category) => {
+    // const newIncompleteTodos = [...incompleteTodos];
+    // newIncompleteTodos.splice(index, 1);
+    const targetTodos = incompleteTodos.filter((todo) => todo.category === category)
+    const targetTodo = targetTodos[index]
 
-    const newCompleteTodos = [...completeTodos, incompleteTodos[index]];
-
+    const newIncompleteTodos = [...incompleteTodos].filter((todo) => todo !== targetTodo)
+    const newCompleteTodos = [...completeTodos, targetTodo];
     setInCompleteTodos(newIncompleteTodos);
     setCompleteTodos(newCompleteTodos);
   };
 
-  const onClickBack = (index: number) => {
-    const newCompleteTodos = [...completeTodos];
-    newCompleteTodos.splice(index, 1);
-    const newIncompleteTodos = [...incompleteTodos, completeTodos[index]];
+  const onClickBack = (index: number, category: Category) => {
+    // const newCompleteTodos = [...completeTodos];
+    // newCompleteTodos.splice(index, 1);
+    const targetTodos = completeTodos.filter((todo) => todo.category === category)
+    const targetTodo = targetTodos[index]
+
+    const newCompleteTodos = [...completeTodos].filter((todo) => todo !== targetTodo)
+    const newIncompleteTodos = [...incompleteTodos, targetTodo];
     setCompleteTodos(newCompleteTodos);
     setInCompleteTodos(newIncompleteTodos);
   };
@@ -58,14 +77,32 @@ export const Todo = () => {
         </p>
       )}
 
-      <IncompleteTodos
-        todos={incompleteTodos}
-        onClickComplete={onClickComplete}
-        onClickDelete={onClickDelete}
-      />
-      <CompleteTodos todos={completeTodos} onClick={onClickBack} />
-        </>
-    )
+      <div className="list-row">
+        <IncompleteTodos
+          todos={incompleteTodos.filter((todo) => todo.category === "work")}
+          onClickComplete={onClickComplete}
+          onClickDelete={onClickDeleteForWork}
+          title="お仕事 TODO"
+        />
+        <IncompleteTodos
+          todos={incompleteTodos.filter((todo) => todo.category === "prv")}
+          onClickComplete={onClickComplete}
+          onClickDelete={onClickDeleteForWork}
+          title="プライベート TODO"
+        />
+      </div>
+      <div className="list-row">
+        <CompleteTodos
+          todos={completeTodos.filter((todo) => todo.category === "work")}
+          onClick={onClickBack}
+          title="お仕事 完了TODO" />
+        <CompleteTodos
+          todos={completeTodos.filter((todo) => todo.category === "prv")}
+          onClick={onClickBack}
+          title="プラベ 完了TODO" />
+      </div>
+    </>
+  )
 
 
 }

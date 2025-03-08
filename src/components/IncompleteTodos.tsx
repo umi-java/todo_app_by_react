@@ -1,26 +1,37 @@
+import { Category, Todo } from "../Todo";
+
+const style = {
+  border: "2px solid #aacfd0",
+  minWidth: "200px",
+  minHeight: "200px",
+  padding: "8px",
+  margin: "8px",
+  borderRadius: "8px",
+};
+
 interface IncompleteProps {
-    todos: string[]
-    onClickComplete: (index: number) => void
-    onClickDelete: (index: number) => void
+  todos: Todo[]
+  onClickComplete: (index: number, category: Category) => void
+  onClickDelete: (index: number, category: Category) => void
+  title: string
 }
 
 export const IncompleteTodos = (props: IncompleteProps) => {
-    const { todos, onClickComplete, onClickDelete } = props;
-    return (
-      <div className="incomplete-area">
-        <p className="title">未完了のTODO</p>
-        <ul>
-          {todos.map((todo, index) => (
-            <li key={todo}>
-              <div className="list-row">
-                <p className="todo-item">{todo}</p>
-                <button onClick={() => onClickComplete(index)}>完了</button>
-                <button onClick={() => onClickDelete(index)}>削除</button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
-  
+  const { todos, onClickComplete, onClickDelete, title } = props;
+  return (
+    <div style={style}>
+      <p className="title">{title}</p>
+      <ul>
+        {todos.map((todo, index) => (
+          <li key={todo.text}>
+            <div className="list-row">
+              <p className="todo-item">{todo.text}</p>
+              <button onClick={() => onClickComplete(index, todo.category)}>完了</button>
+              <button onClick={() => onClickDelete(index, todo.category)}>削除</button>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};

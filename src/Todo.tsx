@@ -61,7 +61,12 @@ export const Todo = () => {
     setInCompleteTodos(newIncompleteTodos);
   };
 
-  const isMaxLimitIncompleteTodos = incompleteTodos.length >= 5;
+  const onDeleteAllCompleteTodos = () => {
+    if (confirm("全ての完了TODOを一括削除しても大丈夫？"))
+      setCompleteTodos([])
+  }
+
+  const isMaxLimitIncompleteTodos = incompleteTodos.length >= 10
 
   return (
     <>
@@ -73,7 +78,7 @@ export const Todo = () => {
       />
       {isMaxLimitIncompleteTodos && (
         <p style={{ color: "red" }}>
-          登録できるTODOは5個まで。はやく消化してね。
+          登録できるTODOは10個まで。はやく消化してね〜。
         </p>
       )}
 
@@ -99,8 +104,11 @@ export const Todo = () => {
         <CompleteTodos
           todos={completeTodos.filter((todo) => todo.category === "prv")}
           onClick={onClickBack}
-          title="プラベ 完了TODO" />
+          title="プライベート 完了TODO" />
       </div>
+      <button
+        onClick={onDeleteAllCompleteTodos}
+        disabled={completeTodos.length < 1}>完了TODO 一括削除</button>
     </>
   )
 

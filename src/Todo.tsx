@@ -27,7 +27,7 @@ export const Todo = () => {
     setTodoText("")
   }
 
-  const onClickDeleteForWork = (index: number, category: Category) => {
+  const onClickDelete = (index: number, category: Category) => {
     // const newTodos = [...incompleteTodos];
     // newTodos.splice(index, 1);
     const targetTodos = incompleteTodos.filter((todo) => todo.category === category)
@@ -86,13 +86,13 @@ export const Todo = () => {
         <IncompleteTodos
           todos={incompleteTodos.filter((todo) => todo.category === "work")}
           onClickComplete={onClickComplete}
-          onClickDelete={onClickDeleteForWork}
+          onClickDelete={onClickDelete}
           title="お仕事 TODO"
         />
         <IncompleteTodos
           todos={incompleteTodos.filter((todo) => todo.category === "prv")}
           onClickComplete={onClickComplete}
-          onClickDelete={onClickDeleteForWork}
+          onClickDelete={onClickDelete}
           title="プライベート TODO"
         />
       </div>

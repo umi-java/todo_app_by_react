@@ -1,54 +1,54 @@
-# React + TypeScript + Vite
+# TODOアプリ
+宿題：
+[【React18対応】モダンJavaScriptの基礎から始める挫折しないためのReact入門](https://www.udemy.com/course/modern_javascipt_react_beginner/)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+上記講座の「SECTION７の TODOアプリ開発」を行い、オリジナルで何か機能１つ以上を付け加える
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+StackBlitzにて作成
 
-## Expanding the ESLint configuration
+https://stackblitz.com/~/github.com/umi-java/todo_app_by_react
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## 概要説明
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 追加機能
+- TODOタスクを「仕事」「プライベート」の2カテゴリに分類
+  - TODO送信ボタンを2種類用意し、入力時にカテゴリ分けを可能にした
+  - 完了TODOへの移動、未完了へ戻す動作も各カテゴリで分けて管理可能にした
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- TODOタスクの作成上限を5→10個に増やした
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- 完了TODOの一括削除ボタンを追加
+  - 全カテゴリの全完了TODOを一括で削除できる
+  - 削除の前にアラートを出し、確認後に削除実行
+
+### どうしてその機能をつけたか
+- やることが多すぎて何から手をつけるべきか分からず焦る、という悩みはよくある
+  - 対策として、タスクをカテゴリ分けすることで内容を整理でき、優先順位等を考えるのに役立つと考えた
+  - 仕事とプライベートのどちらも充実させたいという思いから、この2分類にした
+  - 使用者によって分類するカテゴリをカスタマイズしやすいよう、後からカテゴリの追加という機能追加もしやすい設計にした
+  - カテゴリを2つに分けたことで、TODOの合計上限5つでは少なく感じたため上限を10個にふやした
+- 既存の仕様では、完了TODOを削除するのが面倒だった
+  - 完了したタスクは一つずつ削除するよりも一括で削除する機能の需要が高いと考えた
+  - 完了TODOをたくさん貯めて、一気に消すのが気持ちいい
+  - 一括削除、さらに復元不可の仕様のため、削除前にアラートを入れるのが親切な設計だと考えた
+
+
+## 作成にあたってのチャレンジや学んだこと
+
+### TypeScriptで書き換えた
+
+  本業ではTypeScriptを使用しているのと、現在世界中でもTypeScriptでのフロントエンド開発が一般的になっている状況を踏まえUdemyの講座で作成したJavaScriptのコードをTypeScriptで書き換えた上で追加機能を実装した。
+  
+  型の理解がまだ浅く、TODOの入力値を`String`指定すると`map`の`key`に使用できずエラーが起こり、プリミティブ型の`string`を指定する必要があることを知るなど、型を意識した実装に苦労した。
+
+### 「カテゴリ分け」機能の実装の難しさ
+
+  カテゴリ分け機能を思案した当初は、`incompleteTodos`, `completeTodos`配列をそれぞれカテゴリの数だけ用意して実装しようと考えていたが、いざコードを書き始めると`onClick**`系のメソッドや`CompleteTodos`などのコンポーネントも全てカテゴリの分作る必要があり「コンポーネント化して使いまわせる」というReactの特長を活用できない悪い設計になることに気付いた。そうして手を動かしながら考えた結果、TODOタスクを`text`と`category`属性をもつオブジェクトとして扱う設計に着地した。
+
+  オブジェクトの配列を`useState()`で管理する扱い方は未知であったためchatGPTに聞きながら扱い方を学んだ。
+
+
